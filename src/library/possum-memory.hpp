@@ -3,6 +3,7 @@
 
 #include "possum-types.hpp"
 #include "possum-handle.hpp"
+#include "possum-platform.hpp"
 
 typedef struct        PossumMemory;
 typedef PossumMemory* PossumMemoryPtr;

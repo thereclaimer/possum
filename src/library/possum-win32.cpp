@@ -1,6 +1,6 @@
 #include "possum.hpp"
 #include "possum-platform-win32.cpp"
-
+#include "possum-memory.cpp"
 
 PossumContextPtr possum_context;
 
@@ -12,7 +12,7 @@ possum_initialize() {
     possum_context = (PossumContextPtr)malloc(sizeof(PossumContext));
 
     possum_platform_win32_initialize();
-    // possum_memory_initialize();
+    possum_memory_initialize();
 
     return(possum_context);
 }

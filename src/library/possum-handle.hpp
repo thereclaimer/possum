@@ -30,7 +30,7 @@ struct PossumHandle {
     };
 };
 
-enum PossumHandleType : s8 {
+enum PossumHandleType : u8 {
     POSSUM_HANDLE_TYPE_INVALID = 0,
     POSSUM_HANDLE_TYPE_ARENA   = 1
 };

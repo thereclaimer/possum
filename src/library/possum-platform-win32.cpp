@@ -8,7 +8,7 @@ PossumPlatformContextPtr possum_platform_context;
 internal void
 possum_platform_win32_initialize() {
 
-    platform_api.memory_allocate = possum_platform_win32_memory_allocate;     
+    possum_platform_memory_allocate = possum_platform_win32_memory_allocate;     
 
 }
 
