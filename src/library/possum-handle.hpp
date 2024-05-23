@@ -13,6 +13,7 @@
  ***********************************/
 struct PossumHandle {
     union {
+        
         struct {
             
             //this is the type of handle it is
@@ -22,7 +23,9 @@ struct PossumHandle {
             
             //this is the unique id of whatever the handle is for
             //most likely an index in an array
-            u16 uid;
+            //it is signed so that the system that created it
+            //can use this as an error code
+            s16 uid;
 
         };
 
