@@ -23,4 +23,8 @@ possum_handle_create(
     PossumHandleType type
 );
 
+api b8
+possum_memory_arena_handle_valid(
+    PossumHandle handle);
+
 #endif //POSSUM_HANDLE_HPP

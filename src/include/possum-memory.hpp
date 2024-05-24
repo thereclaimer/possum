@@ -22,4 +22,21 @@ possum_memory_arena_create(
     const u64   arena_size_bytes,
     const char* arena_tag);
 
+api b8
+possum_memory_arena_handle_valid(
+    PossumHandle handle);
+
+
+//reserve the next available block in the arena
+api memory
+possum_memory_arena_reserve_block(
+    PossumHandle arena_handle,
+    u64          block_size_bytes,
+    u64          block_offset = 0);
+
+//free a block
+api void
+possum_memory_arena_free_block(
+    memory block);
+
 #endif //POSSUM_MEMORY_HPP

@@ -27,6 +27,10 @@ struct PossumHandle {
             //can use this as an error code
             s16 uid;
 
+            //this is data specific to the system that created the handle
+            //its whatever data is meaningful to help associate the handle
+            //with unique data
+            u16 meta;
         };
 
         u64 value;
