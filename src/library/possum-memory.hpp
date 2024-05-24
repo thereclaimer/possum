@@ -66,10 +66,12 @@ struct PossumMemoryArena {
 #define POSSUM_MEMORY_ARENA_INDEX_INVALID -1
 
 enum PossumMemoryErrorCode {
-    POSSUM_MEMORY_ERROR_CODE_INVALID              = -1,
-    POSSUM_MEMORY_ERROR_CODE_MAX_ARENAS           = -2,
-    POSSUM_MEMORY_ERROR_CODE_NOT_ENOUGH_SPACE     = -3,
-    POSSUM_MEMORY_ERROR_CODE_INVALID_ARENA_HANDLE = -4
+    POSSUM_MEMORY_ERROR_CODE_INVALID                = -1,
+    POSSUM_MEMORY_ERROR_CODE_MAX_ARENAS             = -2,
+    POSSUM_MEMORY_ERROR_CODE_NOT_ENOUGH_SPACE       = -3,
+    POSSUM_MEMORY_ERROR_CODE_INVALID_ARENA_HANDLE   = -4,
+    POSSUM_MEMORY_ERROR_CODE_ARENA_NOT_ENOUGH_SPACE = -5,
+
 };
 
 enum PossumMemoryManagementStrategy {
@@ -133,8 +135,15 @@ possum_memory_arena_from_memory(
 
     //footer
     memory block_memory = arena_memory + requested_memory_size_bytes;
+
+    PossumMemoryBlockPtr first_block = (PossumMemoryBlockPtr)block_memory;
+    first_block->external_handle = NULL;
+    first_block->size_bytes      = requested_memory_size_bytes - sizeof(PossumMemoryBlock);
+    first_block->memory          = arena_memory;
+    first_block->next            = NULL;
+
     arena_footer->block_memory = block_memory;
-    arena_footer->blocks       = NULL;
+    arena_footer->blocks       = first_block;
 
     return(arena);
 }

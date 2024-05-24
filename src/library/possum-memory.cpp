@@ -199,6 +199,32 @@ possum_memory_arena_get(
     return(valid ? arena_ptr : NULL);     
 }
 
+internal u64
+possum_memory_arena_used_size_bytes(
+    PossumMemoryArenaPtr arena_ptr) {
+
+    auto arena_footer_blocks = arena_ptr->footer.blocks;
+
+    if (!arena_footer_blocks) {
+        return(0);
+    }
+
+    u64 arena_used_size_bytes = 0;
+
+    for (
+        PossumMemoryBlockPtr memory_block = arena_footer_blocks;
+        memory_block->next != NULL;
+        memory_block = memory_block->next) {
+
+        arena_used_size_bytes +=
+            memory_block->external_handle ?
+                memory_block->size_bytes  :
+                0;
+    }
+
+    return(arena_used_size_bytes);
+}
+
 external memory
 possum_memory_arena_reserve_block(
     PossumHandle arena_handle,
@@ -210,6 +236,37 @@ possum_memory_arena_reserve_block(
     if (arena_ptr == NULL) {
         return(NULL);
     }
+
+    //get the sizes
+    u64 arena_memory_size_bytes      = arena_ptr->body.arena_memory_size_bytes;     
+    u64 arena_memory_used_size_bytes = possum_memory_arena_used_size_bytes(arena_ptr);
+
+    //sanity check, make sure our reservation isn't bigger than the arena
+    if (block_size_bytes > arena_memory_size_bytes) {
+        return(NULL);
+    }
+
+    //iterate through the blocks and find one available that can fit
+    PossumMemoryBlockPtr free_block = NULL;
+    for (
+        PossumMemoryBlockPtr block = arena_ptr->footer.blocks;
+        block->next != NULL;
+        block = block->next) {
+
+        if (
+            block->external_handle == NULL && 
+            block->size_bytes >= block_size_bytes) {
+            
+            free_block = block;
+        }
+    }
+
+    //if there's no block we can reserve from, we're done
+    if (!free_block) {
+        return(NULL);
+    }
+
+    //we have a block, so we need to subdivide it
 
     return(NULL);
 }
