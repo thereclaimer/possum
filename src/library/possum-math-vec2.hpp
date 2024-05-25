@@ -9,8 +9,17 @@ typedef struct          PossumMathVec2;
 typedef PossumMathVec2* PossumMathVec2Ptr;
 
 struct PossumMathVec2 {
-    f32 x;
-    f32 y;  
+
+    union {
+
+        struct {
+            f32 x;
+            f32 y;  
+        };
+    
+        f32 values[2];
+    };
+    
 };
 
 inline PossumMathVec2
@@ -100,7 +109,7 @@ possum_math_vec2_normalize(
 }
 
 inline PossumMathVec2
-possum_math_vec2_add_new(
+possum_math_vec2_add(
     const PossumMathVec2Ptr v2_a,
     const PossumMathVec2Ptr v2_b) {
 
@@ -112,13 +121,143 @@ possum_math_vec2_add_new(
     return(v2_c);
 }
 
+inline PossumMathVec2
+possum_math_vec2_add_batch(
+    const u64               count,
+    const PossumMathVec2Ptr in_v2_a,
+    const PossumMathVec2Ptr in_v2_b,
+          PossumMathVec2Ptr out_v2_c) {
+
+    PossumMathVec2 i_v2_a = {0};
+    PossumMathVec2 i_v2_b = {0};
+    PossumMathVec2 i_v2_c = {0};
+    
+
+    for (
+        u64 index = 0;
+        index < count;
+        ++index) {
+
+        i_v2_a = in_v2_a[index];
+        i_v2_b = in_v2_b[index];
+        
+        i_v2_c = {0};
+        v2_c.x = v2_a.x + v2_b.x;
+        v2_c.y = v2_a.y + v2_b.y;
+    }
+
+    return(v2_c);
+}
+
 inline void
-possum_math_vec2_add(
+possum_math_vec2_add_b_to_a(
           PossumMathVec2Ptr v2_a,
     const PossumMathVec2Ptr v2_b) {
 
     v2_a->x += v2_b->x;
     v2_a->y += v2_b->y;
 }
+
+inline void
+possum_math_vec2_subtract_b_from_a(
+          PossumMathVec2Ptr v2_a,
+    const PossumMathVec2Ptr v2_b) {
+
+    v2_a->x -= v2_b->x;
+    v2_a->y -= v2_b->y;
+}
+
+inline PossumMathVec2
+possum_math_vec2_difference_a_to_b(
+    const PossumMathVec2Ptr v2_a,
+    const PossumMathVec2Ptr v2_b) {
+
+    PossumMathVec2 v2_c = {0};
+
+    v2_c.x = v2_a->x - v2_b->x;
+    v2_c.y = v2_a->y - v2_b->y;
+
+    return(v2_c);
+}
+
+inline f32
+possum_math_vec2_dot(
+    const PossumMathVec2Ptr v2_a,
+    const PossumMathVec2Ptr v2_b) {
+
+    f32 a_dot_b = 
+        (v2_a->x * v2_b->x) +  
+        (v2_a->y * v2_b->y);
+
+    return(a_dot_b);
+}
+
+inline void
+possum_math_vec2_dot_batch(
+    const u64               v2_count,
+    const PossumMathVec2Ptr in_v2_a,
+    const PossumMathVec2Ptr in_v2_b,
+          f32*              out_a_dot_b) {
+
+
+    PossumMathVec2 v2_a   = {0};
+    PossumMathVec2 v2_b   = {0};
+    f32            v2_a_x = 0.0f;
+    f32            v2_a_y = 0.0f;
+    f32            v2_b_x = 0.0f;
+    f32            v2_b_y = 0.0f;
+
+    for (
+        u64 index = 0;
+        index < v2_count;
+        ++index) {
+        
+        v2_a = in_v2_a[index]; 
+        v2_b = in_v2_b[index]; 
+
+        v2_a_x = v2_a.x; 
+        v2_a_y = v2_a.y; 
+        v2_b_x = v2_b.x;
+        v2_b_y = v2_b.y;
+
+        out_a_dot_b[index] =
+            (v2_a_x * v2_b_x) +  
+            (v2_a_y * v2_b_y); 
+    }
+}
+
+inline PossumMathVec2
+possum_math_vec2_project_a_onto_b(
+    const PossumMathVec2Ptr in_v2_a,
+    const PossumMathVec2Ptr in_v2_b) {
+
+    f32 a_dot_b = possum_math_vec2_dot(in_v2_a,in_v2_b);
+    f32 b_dot_b = possum_math_vec2_dot(in_v2_b,in_v2_b);
+
+    f32 scalar = a_dot_b / b_dot_b;
+
+    PossumMathVec2 projection = possum_math_vec2_copy(in_v2_b);
+    possum_math_vec2_scalar(&projection,scalar);
+
+    return(projection);
+}
+
+inline PossumMathVec2
+possum_math_vec2_reject_a_from_b(
+    const PossumMathVec2Ptr in_v2_a,
+    const PossumMathVec2Ptr in_v2_b) {
+
+    f32 a_dot_b = possum_math_vec2_dot(in_v2_a,in_v2_b);
+    f32 b_dot_b = possum_math_vec2_dot(in_v2_b,in_v2_b);
+
+    f32 scalar = a_dot_b / b_dot_b;
+
+    PossumMathVec2 rejection = possum_math_vec2_difference_a_to_b(in_v2_a,in_v2_b);
+    possum_math_vec2_scalar(&rejection,scalar);
+
+    return(rejection);
+}
+
+
 
 #endif //POSSUM_MATH_VEC2_HPP

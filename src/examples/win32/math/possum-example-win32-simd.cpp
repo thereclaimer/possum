@@ -10,14 +10,15 @@ generate_values(
     const u64  count,
           f32p values) {
 
-    const f32 scale = 1.0f / FLT_MAX;
 
     for (
         u64 index = 0;
         index < count;
         ++index) {
 
-        values[index] = rand() * scale;
+        u32 value = rand() % 100 + 1;
+
+        values[index] = (f32)value;
     }
 }
 
@@ -56,7 +57,7 @@ int main(int argc, char** argv) {
         index < values_count;
         ++index) {
 
-        POSSUM_ASSERT(values_c_scalar[index] = values_c_simd[index]);
+        POSSUM_ASSERT(values_c_scalar[index] == values_c_simd[index]);
     }
 
     return(0);
