@@ -5,6 +5,7 @@
 #include "possum-handle.hpp"
 #include "possum-memory.hpp"
 #include "possum-platform.hpp"
+#include "possum-math.hpp"
 
 typedef struct         PossumContext;
 typedef PossumContext* PossumContextPtr;

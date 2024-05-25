@@ -26,10 +26,10 @@ int main(int argc, char** argv) {
     POSSUM_ASSERT(possum_memory_arena_handle_valid(arena_handle_3));
 
     //let's reserve some blocks in those arenas
-    memory arena_1_block_1 = 
-        possum_memory_arena_reserve_block(
-            arena_handle_1,
-            sizeof(MyStruct));
+    // memory arena_1_block_1 = 
+    //     possum_memory_arena_reserve_block(
+    //         arena_handle_1,
+    //         sizeof(MyStruct));
 
     return(0);
 }

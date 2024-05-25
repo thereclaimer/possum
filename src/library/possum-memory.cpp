@@ -213,7 +213,7 @@ possum_memory_arena_used_size_bytes(
 
     for (
         PossumMemoryBlockPtr memory_block = arena_footer_blocks;
-        memory_block->next != NULL;
+        memory_block != NULL && memory_block->next != NULL;
         memory_block = memory_block->next) {
 
         arena_used_size_bytes +=

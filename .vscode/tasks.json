@@ -2,10 +2,13 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Build Possum Library DLL",
-			"command": "scripts\\possum-build-dll.bat",
+			"label": "Build Possum Example Arena",
+			"command": "scripts\\possum-build-examples-win32-arena.bat",
+			"dependsOn":[
+				"Build Possum Library DLL",
+			],
 			"args":[
-            ],
+			],
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
@@ -15,10 +18,13 @@
 			"group": "build"
 		},
 		{
-			"label": "Build Possum Examples Win32",
-			"command": "scripts\\possum-build-examples-win32.bat",
+			"label": "Build Possum Example Simd",
+			"command": "scripts\\possum-build-examples-win32-simd.bat",
+			"dependsOn":[
+				"Build Possum Library DLL",
+			],
 			"args":[
-            ],
+			],
 			"options": {
 				"cwd": "${workspaceFolder}"
 			},
@@ -26,6 +32,19 @@
 				"$msCompile"
 			],
 			"group": "build"
-		}
+		},
+		{
+			"label": "Build Possum Library DLL",
+			"command": "scripts\\possum-build-dll.bat",
+			"args":[
+			],
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [
+				"$msCompile"
+			],
+			"group": "build"
+		},
 	]
 }
