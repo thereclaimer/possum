@@ -4,8 +4,9 @@
 #include <math.h>
 
 #include "possum-types.hpp"
+#include "possum-math-simd-4f32.hpp"
 
-typedef struct          PossumMathVec2;
+struct  PossumMathVec2;
 typedef PossumMathVec2* PossumMathVec2Ptr;
 
 struct PossumMathVec2 {
@@ -70,19 +71,18 @@ possum_math_vec2_magnitude(
     return(magnitude);
 }
 
-inline f32
+inline void
 possum_math_vec2_magnitude_batch(
     const u64               v2_count,
     const PossumMathVec2Ptr in_v2,
           f32p              out_magnitude) {
 
-
-    PossumMathVec2 i_v2      = {0};
+    PossumMathVec2 i_v2 = {0};
 
     for(
         u64 v2_index = 0;
         v2_index < v2_count;
-        v2_index) {
+        ++v2_index) {
 
         i_v2 = in_v2[v2_index];
 
@@ -91,6 +91,115 @@ possum_math_vec2_magnitude_batch(
                 (i_v2.x * i_v2.x) + 
                 (i_v2.y * i_v2.y)  
             );
+    }
+}
+
+inline void
+possum_math_vec2_magnitude_batch_by_4(
+    const u64               v2_count,
+    const PossumMathVec2Ptr in_v2,
+          f32p              out_magnitude) {
+
+    PossumMathVec2 i_v2[4];
+    f32            i_v2_x[4];
+    f32            i_v2_y[4];
+    f32            i_v2_x_square[4];
+    f32            i_v2_y_square[4];
+    f32            i_v2_x_and_y_square[4];
+    f32            i_v2_magnitude[4];
+
+    for(
+        u64 v2_index = 0;
+        v2_index < v2_count;
+        v2_index += 4) {
+
+        i_v2[0] = in_v2[v2_index];
+        i_v2[1] = in_v2[v2_index + 1];
+        i_v2[2] = in_v2[v2_index + 2];
+        i_v2[3] = in_v2[v2_index + 3];
+
+        i_v2_x[0] = i_v2[0].x;
+        i_v2_x[1] = i_v2[1].x;
+        i_v2_x[2] = i_v2[2].x;
+        i_v2_x[3] = i_v2[3].x;
+
+        i_v2_y[0] = i_v2[0].y;
+        i_v2_y[1] = i_v2[1].y;
+        i_v2_y[2] = i_v2[2].y;
+        i_v2_y[3] = i_v2[3].y;
+
+        i_v2_x_square[0] = i_v2_x[0] * i_v2_x[0];
+        i_v2_x_square[1] = i_v2_x[1] * i_v2_x[1];
+        i_v2_x_square[2] = i_v2_x[2] * i_v2_x[2];
+        i_v2_x_square[3] = i_v2_x[3] * i_v2_x[3];
+
+        i_v2_y_square[0] = i_v2_y[0] * i_v2_y[0];
+        i_v2_y_square[1] = i_v2_y[1] * i_v2_y[1];
+        i_v2_y_square[2] = i_v2_y[2] * i_v2_y[2];
+        i_v2_y_square[3] = i_v2_y[3] * i_v2_y[3];
+
+        i_v2_x_and_y_square[0] = i_v2_x_square[0] + i_v2_y_square[0];
+        i_v2_x_and_y_square[1] = i_v2_x_square[1] + i_v2_y_square[1]; 
+        i_v2_x_and_y_square[2] = i_v2_x_square[2] + i_v2_y_square[2]; 
+        i_v2_x_and_y_square[3] = i_v2_x_square[3] + i_v2_y_square[3]; 
+
+        i_v2_magnitude[0] = sqrtf(i_v2_x_and_y_square[0]);
+        i_v2_magnitude[1] = sqrtf(i_v2_x_and_y_square[1]);
+        i_v2_magnitude[2] = sqrtf(i_v2_x_and_y_square[2]);
+        i_v2_magnitude[3] = sqrtf(i_v2_x_and_y_square[3]);
+
+        out_magnitude[v2_index]     = i_v2_magnitude[0];
+        out_magnitude[v2_index + 1] = i_v2_magnitude[1];
+        out_magnitude[v2_index + 2] = i_v2_magnitude[2];
+        out_magnitude[v2_index + 3] = i_v2_magnitude[3];
+    }
+}
+
+inline void
+possum_math_vec2_magnitude_batch_simd(
+    const u64               v2_count,
+    const PossumMathVec2Ptr in_v2,
+          f32p              out_magnitude) {
+
+    PossumMathVec2 i_v2[4];
+    f32            i_v2_x[4];
+    f32            i_v2_y[4];
+
+    reg4f32 register_i_v2_x;
+    reg4f32 register_i_v2_y;
+    reg4f32 register_i_v2_x_square;
+    reg4f32 register_i_v2_y_square;
+    reg4f32 register_i_v2_x_and_y_square;
+    reg4f32 register_i_v2_magnitude;
+    
+    for(
+        u64 v2_index = 0;
+        v2_index < v2_count;
+        v2_index += 4) {
+
+        i_v2[0]   = in_v2[v2_index];
+        i_v2[1]   = in_v2[v2_index + 1];
+        i_v2[2]   = in_v2[v2_index + 2];
+        i_v2[3]   = in_v2[v2_index + 3];
+
+        i_v2_x[0] = i_v2[0].x;
+        i_v2_x[1] = i_v2[1].x;
+        i_v2_x[2] = i_v2[2].x;
+        i_v2_x[3] = i_v2[3].x;
+
+        i_v2_y[0] = i_v2[0].y;
+        i_v2_y[1] = i_v2[1].y;
+        i_v2_y[2] = i_v2[2].y;
+        i_v2_y[3] = i_v2[3].y;
+
+        register_i_v2_x              = possum_math_simd_reg4f32_load(i_v2_x);
+        register_i_v2_y              = possum_math_simd_reg4f32_load(i_v2_y);
+        register_i_v2_x_square       = possum_math_simd_reg4f32_multiply(register_i_v2_x,register_i_v2_x);
+        register_i_v2_y_square       = possum_math_simd_reg4f32_multiply(register_i_v2_y,register_i_v2_y);
+        register_i_v2_x_and_y_square = possum_math_simd_reg4f32_add(register_i_v2_x_square,register_i_v2_y_square);
+        register_i_v2_magnitude      = possum_math_simd_reg4f32_sqrtf(register_i_v2_x_and_y_square);
+
+        possum_math_simd_reg4f32_store(&out_magnitude[v2_index],register_i_v2_magnitude);
     }
 }
 

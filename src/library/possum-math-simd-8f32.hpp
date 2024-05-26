@@ -7,7 +7,7 @@
 //this register can store 8 f32 values
 typedef __m256 reg8f32;
 
-typedef struct                    PossumMathSimdValues8f32;
+struct  PossumMathSimdValues8f32;
 typedef PossumMathSimdValues8f32* PossumMathSimdValues8f32Ptr;
 
 
@@ -38,7 +38,7 @@ struct PossumMathSimdValues8f32 {
 
 
 inline void
-possum_math_simd_multiply_8f32(
+possum_math_simd_8f32_multiply(
     PossumMathSimdValues8f32Ptr in_8f32_a,
     PossumMathSimdValues8f32Ptr in_8f32_b,
     PossumMathSimdValues8f32Ptr out_8f32_c) {
@@ -55,7 +55,7 @@ possum_math_simd_multiply_8f32(
 }
 
 inline void
-possum_math_simd_add_8f32(
+possum_math_simd_8f32_add(
     PossumMathSimdValues8f32Ptr in_8f32_a,
     PossumMathSimdValues8f32Ptr in_8f32_b,
     PossumMathSimdValues8f32Ptr out_8f32_c) {
@@ -72,7 +72,7 @@ possum_math_simd_add_8f32(
 }
 
 inline void
-possum_math_simd_multiply_8f32_batch(
+possum_math_simd_8f32_multiply_batch(
     const u64  count,
     const f32p in_a,
     const f32p in_b,
@@ -149,7 +149,7 @@ possum_math_simd_add_8f32_batch(
         possum_math_simd_reg8f32_store(&out_c[index],register_c); 
     }
 
-    //do normal multiplies on the remainders that could not be batched
+    //do normal adds on the remainders that could not be batched
     for (
         u64 index = count_adjusted;
         index < count;

@@ -5,7 +5,6 @@
 #include "possum-math-simd.hpp"
 #include "possum-math-vec2.hpp"
 
-
 #define POSSUM_MATH_SIZE_KILOBYTE         1024
 #define POSSUM_MATH_SIZE_KILOBYTES(size)  (size * POSSUM_MATH_SIZE_KILOBYTE);
 #define POSSUM_MATH_SIZE_MEGABTYTES(size) (POSSUM_MATH_SIZE_KILOBYTES(size)  * POSSUM_MATH_SIZE_KILOBYTE);
