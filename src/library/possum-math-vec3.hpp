@@ -24,7 +24,6 @@ struct PossumMathVec3 {
     };
 };
 
-
 inline PossumMathVec3
 possum_math_vec3_create(
     const f32 x,
@@ -44,9 +43,11 @@ possum_math_vec3_copy(
     const PossumMathVec3Ptr v3) {
 
     PossumMathVec3 v3_copy = {0};
-    v3_copy.x = v3->x;
-    v3_copy.y = v3->y;
-    v3_copy.z = v3->z;
+    f32p v3_xyz = v3->xyz;
+
+    v3_copy.x = v3_xyz[0];
+    v3_copy.y = v3_xyz[1];
+    v3_copy.z = v3_xyz[2];
 
     return(v3_copy);
 }
@@ -56,10 +57,13 @@ possum_math_vec3_are_equal(
     const PossumMathVec3Ptr v3_a,
     const PossumMathVec3Ptr v3_b) {
 
+    f32p v3_a_xyz = v3_a->xyz;
+    f32p v3_b_xyz = v3_b->xyz;
+
     bool equal = 
-        (v3_a->x == v3_b->x) && 
-        (v3_a->y == v3_b->y) && 
-        (v3_a->z == v3_b->z);
+        (v3_a_xyz[0] == v3_b_xyz[0]) && 
+        (v3_a_xyz[1] == v3_b_xyz[1]) && 
+        (v3_a_xyz[2] == v3_b_xyz[2]);
 
     return(equal);
 }
@@ -69,24 +73,24 @@ possum_math_vec3_scalar(
           PossumMathVec3Ptr v3,    
     const f32               scalar) {
 
-    v3->x *= scalar;
-    v3->y *= scalar;
-    v3->z *= scalar;
+    f32p v3_xyz = v3->xyz;
+
+    v3_xyz[0] *= scalar;
+    v3_xyz[1] *= scalar;
+    v3_xyz[2] *= scalar;
 }
 
 inline f32
 possum_math_vec3_magnitude(
     const PossumMathVec3Ptr v3) {
 
-    f32 v3_x = v3->x;
-    f32 v3_y = v3->y;
-    f32 v3_z = v3->z;
+    f32p v3_xyz = v3->xyz;
 
     f32 magnitude = 
         sqrtf(
-            (v3_x * v3_x) +
-            (v3_y * v3_y) +
-            (v3_z * v3_z)
+            (v3_xyz[0] * v3_xyz[0]) +
+            (v3_xyz[1] * v3_xyz[1]) +
+            (v3_xyz[2] * v3_xyz[2])
         );
 
     return(magnitude);
@@ -273,10 +277,13 @@ possum_math_vec3_add(
     const PossumMathVec3Ptr v3_b) {
 
     PossumMathVec3 v3_c = {0};
+    
+    f32p v3_a_xyz = v3_a->xyz;
+    f32p v3_b_xyz = v3_b->xyz;
 
-    v3_c.x = v3_a->x + v3_b->x;
-    v3_c.y = v3_a->y + v3_b->y;
-    v3_c.z = v3_a->z + v3_b->z;
+    v3_c.x = v3_a_xyz[0] + v3_b_xyz[0];
+    v3_c.y = v3_a_xyz[1] + v3_b_xyz[1];
+    v3_c.z = v3_a_xyz[2] + v3_b_xyz[2];
 
     return(v3_c);
 }
