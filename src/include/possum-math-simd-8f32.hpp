@@ -7,7 +7,7 @@
 //this register can store 8 f32 values
 typedef __m256 reg8f32;
 
-typedef struct                    PossumMathSimdValues8f32;
+struct                    PossumMathSimdValues8f32;
 typedef PossumMathSimdValues8f32* PossumMathSimdValues8f32Ptr;
 
 

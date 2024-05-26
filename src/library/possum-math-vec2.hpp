@@ -131,7 +131,6 @@ possum_math_vec2_add_batch(
     PossumMathVec2 i_v2_a = {0};
     PossumMathVec2 i_v2_b = {0};
     PossumMathVec2 i_v2_c = {0};
-    
 
     for (
         u64 index = 0;
@@ -142,11 +141,11 @@ possum_math_vec2_add_batch(
         i_v2_b = in_v2_b[index];
         
         i_v2_c = {0};
-        v2_c.x = v2_a.x + v2_b.x;
-        v2_c.y = v2_a.y + v2_b.y;
-    }
+        i_v2_c.x = i_v2_a.x + i_v2_b.x;
+        i_v2_c.y = i_v2_a.y + i_v2_b.y;
 
-    return(v2_c);
+        out_v2_c[index] = i_v2_c;
+    }
 }
 
 inline void
