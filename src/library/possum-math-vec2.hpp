@@ -46,6 +46,18 @@ possum_math_vec2_copy(
     return(v2_copy);
 }
 
+inline bool
+possum_math_vec2_are_equal(
+    const PossumMathVec2Ptr v2_a,
+    const PossumMathVec2Ptr v2_b) {
+
+    bool equal = 
+        (v2_a->x == v2_b->x) && 
+        (v2_a->y == v2_b->y);
+
+    return(equal);
+}
+
 inline void
 possum_math_vec2_scalar(
           PossumMathVec2Ptr v2,    
