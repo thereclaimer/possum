@@ -56,4 +56,17 @@ struct PossumMathMat4 {
     };
 };
 
+inline PossumMathMat4
+possum_math_mat4_identity() {
+
+    PossumMathMat4 m4 = {0};
+
+    m4.row0_col0 = 1.0f;
+    m4.row1_col1 = 1.0f;
+    m4.row2_col2 = 1.0f;
+    m4.row3_col3 = 1.0f;
+
+    return(m4);
+}
+
 #endif //POSSUM_MATH_MAT4_HPP
