@@ -31,7 +31,7 @@ possum_math_transform_translate_vector(
 
     PossumMathTransform t = possum_math_mat4_identity();
 
-    f32 v3_t_xyz = v3_t->xyz;
+    f32p v3_t_xyz = v3_t->xyz;
 
     t.row0_col3 = v3_t_xyz[POSSUM_MATH_VEC3_X]; 
     t.row1_col3 = v3_t_xyz[POSSUM_MATH_VEC3_Y]; 
@@ -101,12 +101,12 @@ possum_math_transform_translate_and_scale_vectors(
     f32p v3_t_xyz = v3_t->xyz;    
     f32p v3_s_xyz = v3_s->xyz;
     
-    t.row0_col0 = v3_s_xyz[POSSUM_MATH_VEC3_X]; 
-    t.row0_col3 = v3_t_xyz[POSSUM_MATH_VEC3_X]; 
-    t.row1_col1 = v3_s_xyz[POSSUM_MATH_VEC3_Y]; 
-    t.row1_col3 = v3_t_xyz[POSSUM_MATH_VEC3_Y]; 
-    t.row2_col2 = v3_s_xyz[POSSUM_MATH_VEC3_Z]; 
-    t.row2_col3 = v3_t_xyz[POSSUM_MATH_VEC3_Z]; 
+    t.row0_col0 = v3_s_xyz[POSSUM_MATH_VEC3_X];
+    t.row0_col3 = v3_t_xyz[POSSUM_MATH_VEC3_X];
+    t.row1_col1 = v3_s_xyz[POSSUM_MATH_VEC3_Y];
+    t.row1_col3 = v3_t_xyz[POSSUM_MATH_VEC3_Y];
+    t.row2_col2 = v3_s_xyz[POSSUM_MATH_VEC3_Z];
+    t.row2_col3 = v3_t_xyz[POSSUM_MATH_VEC3_Z];
 
     return(t);
 }

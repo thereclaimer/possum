@@ -44,15 +44,15 @@ struct PossumMathMat3 {
 
 typedef PossumMathMat3* PossumMathMat3Ptr;
 
-#define POSSUM_MATH_MAT3_R0C0 = 0
-#define POSSUM_MATH_MAT3_R0C1 = 1
-#define POSSUM_MATH_MAT3_R0C2 = 2
-#define POSSUM_MATH_MAT3_R1C0 = 3
-#define POSSUM_MATH_MAT3_R1C1 = 4
-#define POSSUM_MATH_MAT3_R1C2 = 5
-#define POSSUM_MATH_MAT3_R2C0 = 6
-#define POSSUM_MATH_MAT3_R2C1 = 7
-#define POSSUM_MATH_MAT3_R2C2 = 8
+#define POSSUM_MATH_MAT3_R0C0 0
+#define POSSUM_MATH_MAT3_R0C1 1
+#define POSSUM_MATH_MAT3_R0C2 2
+#define POSSUM_MATH_MAT3_R1C0 3
+#define POSSUM_MATH_MAT3_R1C1 4
+#define POSSUM_MATH_MAT3_R1C2 5
+#define POSSUM_MATH_MAT3_R2C0 6
+#define POSSUM_MATH_MAT3_R2C1 7
+#define POSSUM_MATH_MAT3_R2C2 8
 
 internal PossumMathMat3
 possum_math_mat3_identity() {
