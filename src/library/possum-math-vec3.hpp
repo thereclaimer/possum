@@ -106,20 +106,20 @@ possum_math_vec3_magnitude_batch(
     const PossumMathVec3Ptr in_v3,
           f32p              out_magnitude) {
 
-    PossumMathVec3 i_v3 = {0};
+    f32p i_v3_xyz = NULL;
 
     for(
         u64 v3_index = 0;
         v3_index < v3_count;
         ++v3_index) {
 
-        i_v3 = in_v3[v3_index];
+        i_v3_xyz = in_v3[v3_index].xyz;
 
         out_magnitude[v3_index] = 
             sqrtf(
-                (i_v3.x * i_v3.x) + 
-                (i_v3.y * i_v3.y) +
-                (i_v3.z * i_v3.z) 
+                (i_v3_xyz[POSSUM_MATH_VEC3_X] * i_v3_xyz[POSSUM_MATH_VEC3_X]) + 
+                (i_v3_xyz[POSSUM_MATH_VEC3_Y] * i_v3_xyz[POSSUM_MATH_VEC3_Y]) +
+                (i_v3_xyz[POSSUM_MATH_VEC3_Z] * i_v3_xyz[POSSUM_MATH_VEC3_Z]) 
             );
     }
 }
