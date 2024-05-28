@@ -44,6 +44,16 @@ struct PossumMathMat3 {
 
 typedef PossumMathMat3* PossumMathMat3Ptr;
 
+#define POSSUM_MATH_MAT3_R0C0 = 0
+#define POSSUM_MATH_MAT3_R0C1 = 1
+#define POSSUM_MATH_MAT3_R0C2 = 2
+#define POSSUM_MATH_MAT3_R1C0 = 3
+#define POSSUM_MATH_MAT3_R1C1 = 4
+#define POSSUM_MATH_MAT3_R1C2 = 5
+#define POSSUM_MATH_MAT3_R2C0 = 6
+#define POSSUM_MATH_MAT3_R2C1 = 7
+#define POSSUM_MATH_MAT3_R2C2 = 8
+
 internal PossumMathMat3
 possum_math_mat3_identity() {
 
@@ -57,22 +67,90 @@ possum_math_mat3_identity() {
 }
 
 internal PossumMathMat3
-possum_math_mat3_multiply_m3a_m3b(
+possum_math_mat3_multiply_m3(
     PossumMathMat3Ptr m3a,
     PossumMathMat3Ptr m3b) {
 
     PossumMathMat3 m3c = {0};
 
-    m3c.m[0] = 
-    m3c.m[1] = 
-    m3c.m[2] = 
-    m3c.m[3] = 
-    m3c.m[4] = 
-    m3c.m[5] = 
-    m3c.m[6] = 
-    m3c.m[7] = 
-    m3c.m[8] = 
+    f32p m3a_m = m3a->m;
+    f32p m3b_m = m3b->m;
 
+    m3c.m[POSSUM_MATH_MAT3_R0C0] = 
+        (m3a_m[POSSUM_MATH_MAT3_R0C0] * m3b_m[POSSUM_MATH_MAT3_R0C0]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R0C1] * m3b_m[POSSUM_MATH_MAT3_R1C0]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R0C2] * m3b_m[POSSUM_MATH_MAT3_R2C0]); 
+    
+    m3c.m[POSSUM_MATH_MAT3_R0C1] = 
+        (m3a_m[POSSUM_MATH_MAT3_R0C0] * m3b_m[POSSUM_MATH_MAT3_R0C1]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R0C1] * m3b_m[POSSUM_MATH_MAT3_R1C1]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R0C2] * m3b_m[POSSUM_MATH_MAT3_R2C1]);
+    
+    m3c.m[POSSUM_MATH_MAT3_R0C2] = 
+        (m3a_m[POSSUM_MATH_MAT3_R0C0] * m3b_m[POSSUM_MATH_MAT3_R0C2]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R0C1] * m3b_m[POSSUM_MATH_MAT3_R1C2]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R0C2] * m3b_m[POSSUM_MATH_MAT3_R2C2]);
+    
+    m3c.m[POSSUM_MATH_MAT3_R1C0] = 
+        (m3a_m[POSSUM_MATH_MAT3_R1C0] * m3b_m[POSSUM_MATH_MAT3_R0C0]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R1C1] * m3b_m[POSSUM_MATH_MAT3_R1C0]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R1C2] * m3b_m[POSSUM_MATH_MAT3_R2C0]);
+    
+    m3c.m[POSSUM_MATH_MAT3_R1C1] = 
+        (m3a_m[POSSUM_MATH_MAT3_R1C0] * m3b_m[POSSUM_MATH_MAT3_R0C1]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R1C1] * m3b_m[POSSUM_MATH_MAT3_R1C1]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R1C2] * m3b_m[POSSUM_MATH_MAT3_R2C1]);
+    
+    m3c.m[POSSUM_MATH_MAT3_R1C2] = 
+        (m3a_m[POSSUM_MATH_MAT3_R1C0] * m3b_m[POSSUM_MATH_MAT3_R0C2]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R1C1] * m3b_m[POSSUM_MATH_MAT3_R1C2]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R1C2] * m3b_m[POSSUM_MATH_MAT3_R2C2]);
+    
+    m3c.m[POSSUM_MATH_MAT3_R2C0] = 
+        (m3a_m[POSSUM_MATH_MAT3_R2C0] * m3b_m[POSSUM_MATH_MAT3_R0C0]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R2C1] * m3b_m[POSSUM_MATH_MAT3_R1C0]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R2C2] * m3b_m[POSSUM_MATH_MAT3_R2C0]);
+    
+    m3c.m[POSSUM_MATH_MAT3_R2C1] = 
+        (m3a_m[POSSUM_MATH_MAT3_R2C0] * m3b_m[POSSUM_MATH_MAT3_R0C1]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R2C1] * m3b_m[POSSUM_MATH_MAT3_R1C1]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R2C2] * m3b_m[POSSUM_MATH_MAT3_R2C1]);
+    
+    m3c.m[POSSUM_MATH_MAT3_R2C2] = 
+        (m3a_m[POSSUM_MATH_MAT3_R2C0] * m3b_m[POSSUM_MATH_MAT3_R0C2]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R2C1] * m3b_m[POSSUM_MATH_MAT3_R1C2]) + 
+        (m3a_m[POSSUM_MATH_MAT3_R2C2] * m3b_m[POSSUM_MATH_MAT3_R2C2]);
+
+    return(m3c);
 }
+
+internal PossumMathVec3
+possum_math_mat3_multiply_v3(
+    PossumMathMat3Ptr m3,
+    PossumMathVec3Ptr v3) {
+
+    PossumMathVec3 v3_new = {0};
+
+    f32p v3_xyz = v3->xyz;
+    f32p m3_m   = m3->m;
+
+    v3_new.x = 
+        (v3_xyz[POSSUM_MATH_VEC3_X] * m3_m[POSSUM_MATH_MAT3_R0C0]) +
+        (v3_xyz[POSSUM_MATH_VEC3_Y] * m3_m[POSSUM_MATH_MAT3_R0C1]) +
+        (v3_xyz[POSSUM_MATH_VEC3_Z] * m3_m[POSSUM_MATH_MAT3_R0C2]);
+
+    v3_new.y = 
+        (v3_xyz[POSSUM_MATH_VEC3_X] * m3_m[POSSUM_MATH_MAT3_R1C0]) +
+        (v3_xyz[POSSUM_MATH_VEC3_Y] * m3_m[POSSUM_MATH_MAT3_R1C1]) +
+        (v3_xyz[POSSUM_MATH_VEC3_Z] * m3_m[POSSUM_MATH_MAT3_R1C2]);
+
+    v3_new.z = 
+        (v3_xyz[POSSUM_MATH_VEC3_X] * m3_m[POSSUM_MATH_MAT3_R2C0]) +
+        (v3_xyz[POSSUM_MATH_VEC3_Y] * m3_m[POSSUM_MATH_MAT3_R2C1]) +
+        (v3_xyz[POSSUM_MATH_VEC3_Z] * m3_m[POSSUM_MATH_MAT3_R2C2]);
+
+    return(v3_new);
+}
+
 
 #endif //POSSUM_MATH_MAT3_HPP

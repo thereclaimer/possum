@@ -24,6 +24,10 @@ struct PossumMathVec3 {
     };
 };
 
+#define POSSUM_MATH_VEC3_X 0
+#define POSSUM_MATH_VEC3_Y 1
+#define POSSUM_MATH_VEC3_Z 2
+
 inline PossumMathVec3
 possum_math_vec3_create(
     const f32 x,
@@ -45,9 +49,9 @@ possum_math_vec3_copy(
     PossumMathVec3 v3_copy = {0};
     f32p v3_xyz = v3->xyz;
 
-    v3_copy.x = v3_xyz[0];
-    v3_copy.y = v3_xyz[1];
-    v3_copy.z = v3_xyz[2];
+    v3_copy.x = v3_xyz[POSSUM_MATH_VEC3_X];
+    v3_copy.y = v3_xyz[POSSUM_MATH_VEC3_Y];
+    v3_copy.z = v3_xyz[POSSUM_MATH_VEC3_Z];
 
     return(v3_copy);
 }
@@ -61,9 +65,9 @@ possum_math_vec3_are_equal(
     f32p v3_b_xyz = v3_b->xyz;
 
     bool equal = 
-        (v3_a_xyz[0] == v3_b_xyz[0]) && 
-        (v3_a_xyz[1] == v3_b_xyz[1]) && 
-        (v3_a_xyz[2] == v3_b_xyz[2]);
+        (v3_a_xyz[POSSUM_MATH_VEC3_X] == v3_b_xyz[POSSUM_MATH_VEC3_X]) && 
+        (v3_a_xyz[POSSUM_MATH_VEC3_Y] == v3_b_xyz[POSSUM_MATH_VEC3_Y]) && 
+        (v3_a_xyz[POSSUM_MATH_VEC3_Z] == v3_b_xyz[POSSUM_MATH_VEC3_Z]);
 
     return(equal);
 }
@@ -75,9 +79,9 @@ possum_math_vec3_scalar(
 
     f32p v3_xyz = v3->xyz;
 
-    v3_xyz[0] *= scalar;
-    v3_xyz[1] *= scalar;
-    v3_xyz[2] *= scalar;
+    v3_xyz[POSSUM_MATH_VEC3_X] *= scalar;
+    v3_xyz[POSSUM_MATH_VEC3_Y] *= scalar;
+    v3_xyz[POSSUM_MATH_VEC3_Z] *= scalar;
 }
 
 inline f32
@@ -88,9 +92,9 @@ possum_math_vec3_magnitude(
 
     f32 magnitude = 
         sqrtf(
-            (v3_xyz[0] * v3_xyz[0]) +
-            (v3_xyz[1] * v3_xyz[1]) +
-            (v3_xyz[2] * v3_xyz[2])
+            (v3_xyz[POSSUM_MATH_VEC3_X] * v3_xyz[POSSUM_MATH_VEC3_X]) +
+            (v3_xyz[POSSUM_MATH_VEC3_Y] * v3_xyz[POSSUM_MATH_VEC3_Y]) +
+            (v3_xyz[POSSUM_MATH_VEC3_Z] * v3_xyz[POSSUM_MATH_VEC3_Z])
         );
 
     return(magnitude);
@@ -281,9 +285,9 @@ possum_math_vec3_add(
     f32p v3_a_xyz = v3_a->xyz;
     f32p v3_b_xyz = v3_b->xyz;
 
-    v3_c.x = v3_a_xyz[0] + v3_b_xyz[0];
-    v3_c.y = v3_a_xyz[1] + v3_b_xyz[1];
-    v3_c.z = v3_a_xyz[2] + v3_b_xyz[2];
+    v3_c.x = v3_a_xyz[POSSUM_MATH_VEC3_X] + v3_b_xyz[POSSUM_MATH_VEC3_X];
+    v3_c.y = v3_a_xyz[POSSUM_MATH_VEC3_Y] + v3_b_xyz[POSSUM_MATH_VEC3_Y];
+    v3_c.z = v3_a_xyz[POSSUM_MATH_VEC3_Z] + v3_b_xyz[POSSUM_MATH_VEC3_Z];
 
     return(v3_c);
 }
@@ -309,9 +313,9 @@ possum_math_vec3_add_batch(
         in_v3_b_xyz = in_v3_b[index].xyz;
         
         i_v3_c = {0};
-        i_v3_c.x = in_v3_a_xyz[0] + in_v3_b_xyz[0];
-        i_v3_c.y = in_v3_a_xyz[1] + in_v3_b_xyz[1];
-        i_v3_c.z = in_v3_a_xyz[2] + in_v3_b_xyz[2];
+        i_v3_c.x = in_v3_a_xyz[POSSUM_MATH_VEC3_X] + in_v3_b_xyz[POSSUM_MATH_VEC3_X];
+        i_v3_c.y = in_v3_a_xyz[POSSUM_MATH_VEC3_Y] + in_v3_b_xyz[POSSUM_MATH_VEC3_Y];
+        i_v3_c.z = in_v3_a_xyz[POSSUM_MATH_VEC3_Z] + in_v3_b_xyz[POSSUM_MATH_VEC3_Z];
 
         out_v3_c[index] = i_v3_c;
     }
@@ -325,9 +329,9 @@ possum_math_vec3_add_b_to_a(
     f32p v3_a_xyz = v3_a->xyz;
     f32p v3_b_xyz = v3_b->xyz;
 
-    v3_a_xyz[0] += v3_b_xyz[0];
-    v3_a_xyz[1] += v3_b_xyz[1];
-    v3_a_xyz[2] += v3_b_xyz[2];
+    v3_a_xyz[POSSUM_MATH_VEC3_X] += v3_b_xyz[POSSUM_MATH_VEC3_X];
+    v3_a_xyz[POSSUM_MATH_VEC3_Y] += v3_b_xyz[POSSUM_MATH_VEC3_Y];
+    v3_a_xyz[POSSUM_MATH_VEC3_Z] += v3_b_xyz[POSSUM_MATH_VEC3_Z];
 }
 
 inline void
@@ -338,9 +342,9 @@ possum_math_vec3_subtract_b_from_a(
     f32p v3_a_xyz = v3_a->xyz;
     f32p v3_b_xyz = v3_b->xyz;
 
-    v3_a_xyz[0] -= v3_b_xyz[0];
-    v3_a_xyz[1] -= v3_b_xyz[1];
-    v3_a_xyz[2] -= v3_b_xyz[2];
+    v3_a_xyz[POSSUM_MATH_VEC3_X] -= v3_b_xyz[POSSUM_MATH_VEC3_X];
+    v3_a_xyz[POSSUM_MATH_VEC3_Y] -= v3_b_xyz[POSSUM_MATH_VEC3_Y];
+    v3_a_xyz[POSSUM_MATH_VEC3_Z] -= v3_b_xyz[POSSUM_MATH_VEC3_Z];
 }
 
 inline PossumMathVec3
@@ -353,9 +357,9 @@ possum_math_vec3_difference_a_to_b(
     f32p v3_a_xyz = v3_a->xyz;
     f32p v3_b_xyz = v3_b->xyz;
 
-    v3_c.x = v3_a_xyz[0] - v3_b_xyz[0];
-    v3_c.y = v3_a_xyz[1] - v3_b_xyz[1];
-    v3_c.z = v3_a_xyz[2] - v3_b_xyz[2];
+    v3_c.x = v3_a_xyz[POSSUM_MATH_VEC3_X] - v3_b_xyz[POSSUM_MATH_VEC3_X];
+    v3_c.y = v3_a_xyz[POSSUM_MATH_VEC3_Y] - v3_b_xyz[POSSUM_MATH_VEC3_Y];
+    v3_c.z = v3_a_xyz[POSSUM_MATH_VEC3_Z] - v3_b_xyz[POSSUM_MATH_VEC3_Z];
 
     return(v3_c);
 }
@@ -369,9 +373,9 @@ possum_math_vec3_dot(
     f32p v3_b_xyz = v3_b->xyz;
 
     f32 a_dot_b = 
-        (v3_a_xyz[0] * v3_a_xyz[0]) +  
-        (v3_a_xyz[1] * v3_a_xyz[1]) +
-        (v3_a_xyz[2] * v3_a_xyz[2]);
+        (v3_a_xyz[POSSUM_MATH_VEC3_X] * v3_a_xyz[POSSUM_MATH_VEC3_X]) +  
+        (v3_a_xyz[POSSUM_MATH_VEC3_Y] * v3_a_xyz[POSSUM_MATH_VEC3_Y]) +
+        (v3_a_xyz[POSSUM_MATH_VEC3_Z] * v3_a_xyz[POSSUM_MATH_VEC3_Z]);
 
     return(a_dot_b);
 }
@@ -395,9 +399,9 @@ possum_math_vec3_dot_batch(
         v3_b_xyz = in_v3_b[index].xyz; 
 
         out_a_dot_b[index] =
-            (v3_a_xyz[0] * v3_b_xyz[0]) +  
-            (v3_a_xyz[1] * v3_b_xyz[1]) + 
-            (v3_a_xyz[2] * v3_b_xyz[2]); 
+            (v3_a_xyz[POSSUM_MATH_VEC3_X] * v3_b_xyz[POSSUM_MATH_VEC3_X]) +  
+            (v3_a_xyz[POSSUM_MATH_VEC3_Y] * v3_b_xyz[POSSUM_MATH_VEC3_Y]) + 
+            (v3_a_xyz[POSSUM_MATH_VEC3_Z] * v3_b_xyz[POSSUM_MATH_VEC3_Z]); 
     }
 }
 
@@ -443,9 +447,9 @@ possum_math_vec3_cross(
     f32p v3_a_xyz = v3_a->xyz;
     f32p v3_b_xyz = v3_b->xyz;
 
-    v3_cross.x = (v3_a_xyz[1] * v3_b_xyz[2]) - (v3_a_xyz[2] * v3_b_xyz[1]);
-    v3_cross.y = (v3_a_xyz[2] * v3_b_xyz[0]) - (v3_a_xyz[0] * v3_b_xyz[2]);
-    v3_cross.z = (v3_a_xyz[0] * v3_b_xyz[1]) - (v3_a_xyz[1] * v3_b_xyz[0]);
+    v3_cross.x = (v3_a_xyz[POSSUM_MATH_VEC3_Y] * v3_b_xyz[POSSUM_MATH_VEC3_Z]) - (v3_a_xyz[POSSUM_MATH_VEC3_Z] * v3_b_xyz[POSSUM_MATH_VEC3_Y]);
+    v3_cross.y = (v3_a_xyz[POSSUM_MATH_VEC3_Z] * v3_b_xyz[POSSUM_MATH_VEC3_X]) - (v3_a_xyz[POSSUM_MATH_VEC3_X] * v3_b_xyz[POSSUM_MATH_VEC3_Z]);
+    v3_cross.z = (v3_a_xyz[POSSUM_MATH_VEC3_X] * v3_b_xyz[POSSUM_MATH_VEC3_Y]) - (v3_a_xyz[POSSUM_MATH_VEC3_Y] * v3_b_xyz[POSSUM_MATH_VEC3_X]);
 
     return(v3_cross);
 }

@@ -72,6 +72,5 @@ possum_math_mat4_identity() {
     return(m4);
 }
 
-static const PossumMathMat4 POSSUM_MATH_MAT4_IDENTITY = possum_math_mat4_identity();
 
 #endif //POSSUM_MATH_MAT4_HPP
