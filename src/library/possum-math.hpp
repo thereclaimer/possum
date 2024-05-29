@@ -23,6 +23,8 @@ typedef vec3f32* vec3f32ptr;
 typedef mat4f32* mat4f32ptr;
 typedef tfm4f32* tfm4f32ptr;
 
+//this is based on the inverse square root algorithm from the Quake codebase
+//courtesy of Id software
 inline f32
 possum_math_inverse_square_root_quake(
     f32 number){
@@ -35,14 +37,13 @@ possum_math_inverse_square_root_quake(
 
     x2 = number * 0.5F;
     y  = number;
-    i  = * ( s64 * ) &y;                       // evil floating point bit level hacking
+    i  = * ( s64 * ) &y;                        // evil floating point bit level hacking
     i  = 0x5f3759df - ( i >> 1 );               // what the fuck?
     y  = * ( f32 * ) &i;
-    y  = y * ( three_halfs - ( x2 * y * y ) );   // 1st iteration
-    // y  = y * ( threehalfs - ( x2 * y * y ) );   // 2nd iteration, this can be removed
+    y  = y * ( three_halfs - ( x2 * y * y ) );  // 1st iteration
 
     return(y);
-    }
+}
 
 inline void
 possum_math_f32_add_batch(
@@ -59,6 +60,7 @@ possum_math_f32_add_batch(
         out_c[index] = in_a[index] + in_b[index];
     }
 }
+
 inline void
 possum_math_f32_multiply_batch(
     const u64  count,
