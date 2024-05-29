@@ -52,9 +52,33 @@ struct PossumMathMat4 {
             PossumMathMat4Row rows[4];
         };
 
-        f32 values[16];
+        f32 m[16];
     };
 };
+
+//ROW 0 
+#define POSSUM_MATH_MAT3_R0C0 0
+#define POSSUM_MATH_MAT3_R0C1 1
+#define POSSUM_MATH_MAT3_R0C2 2
+#define POSSUM_MATH_MAT3_R0C3 3
+
+//ROW 1 
+#define POSSUM_MATH_MAT3_R1C0 4
+#define POSSUM_MATH_MAT3_R1C1 5
+#define POSSUM_MATH_MAT3_R1C2 6
+#define POSSUM_MATH_MAT3_R1C3 7
+
+//ROW 2 
+#define POSSUM_MATH_MAT3_R2C0 8
+#define POSSUM_MATH_MAT3_R2C1 9
+#define POSSUM_MATH_MAT3_R2C2 10
+#define POSSUM_MATH_MAT3_R2C3 11
+
+//ROW 3 
+#define POSSUM_MATH_MAT3_R3C0 12
+#define POSSUM_MATH_MAT3_R3C1 13
+#define POSSUM_MATH_MAT3_R3C2 14
+#define POSSUM_MATH_MAT3_R3C3 15
 
 inline PossumMathMat4
 possum_math_mat4_identity() {

@@ -56,4 +56,5 @@ typedef void*    handle;
 
 typedef u8       byte;
 typedef byte*    memory;
+
 #endif //POSSUM_TYPES_HPP
