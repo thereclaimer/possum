@@ -7,6 +7,7 @@
 #include "possum-math-mat3.hpp"
 #include "possum-math-mat4.hpp"
 #include "possum-math-trig.hpp"
+#include "possum-math-direction.hpp"
 
 typedef PossumMathMat4       PossumMathTransform;
 typedef PossumMathTransform* PossumMathTransformPtr;
@@ -268,6 +269,310 @@ possum_math_transform_rotate_degrees(
     t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
     t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
     
+    return(t);
+}
+
+inline PossumMathTransform
+possum_math_transform_rotate_radians_x(
+    f32 angle_radians) {
+
+    PossumMathTransform t = {0};
+
+    f32 cos_r = cosf(angle_radians);
+    f32 sin_r = sinf(angle_radians);
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = 1.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C2] = -sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C2] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
+    return(t);
+}
+
+inline PossumMathTransform
+possum_math_transform_rotate_radians_y(
+    f32 angle_radians) {
+
+    PossumMathTransform t = {0};
+
+    f32 cos_r = cosf(angle_radians);
+    f32 sin_r = sinf(angle_radians);
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 1.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = -sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
+    return(t);
+}
+
+inline PossumMathTransform
+possum_math_transform_rotate_radians_z(
+    f32 angle_radians) {
+
+    PossumMathTransform t = {0};
+
+    f32 cos_r = cosf(angle_radians);
+    f32 sin_r = sinf(angle_radians);
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C1] = -sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C1] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 1.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
+    return(t);
+}
+
+inline PossumMathTransform
+possum_math_transform_rotate_degrees_x(
+    f32 angle_degrees) {
+
+    PossumMathTransform t = {0};
+
+    f32 angle_radians = possum_math_trig_degrees_to_radians(angle_degrees);
+
+    f32 cos_r = cosf(angle_radians);
+    f32 sin_r = sinf(angle_radians);
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = 1.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C2] = -sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C2] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
+    return(t);
+}
+
+inline PossumMathTransform
+possum_math_transform_rotate_degrees_y(
+    f32 angle_degrees) {
+
+    PossumMathTransform t = {0};
+
+    f32 angle_radians = possum_math_trig_degrees_to_radians(angle_degrees);
+
+    f32 cos_r = cosf(angle_radians);
+    f32 sin_r = sinf(angle_radians);
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 1.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = -sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
+    return(t);
+}
+
+inline PossumMathTransform
+possum_math_transform_rotate_degrees_z(
+    f32 angle_degrees) {
+
+    PossumMathTransform t = {0};
+
+    f32 angle_radians = possum_math_trig_degrees_to_radians(angle_degrees);
+
+    f32 cos_r = cosf(angle_radians);
+    f32 sin_r = sinf(angle_radians);
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C1] = -sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = sin_r;
+    t.m[POSSUM_MATH_MAT3_R3C1] = cos_r;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 1.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
+    return(t);
+}
+
+inline PossumMathTransform
+possum_math_transform_camera_look_at(
+    PossumMathDirectionPtr camera_direction,
+    PossumMathVec3Ptr      camera_position) {
+
+    PossumMathTransform t = {0};
+
+    PossumMathVec3 camera_direction_forward = camera_direction->forward; 
+    PossumMathVec3 camera_direction_right   = camera_direction->right; 
+    PossumMathVec3 camera_direction_up      = camera_direction->up; 
+
+    f32 translation_x = possum_math_vec3_dot(camera_position, camera_direction_forward); 
+    f32 translation_y = possum_math_vec3_dot(camera_position, camera_direction_right); 
+    f32 translation_z = possum_math_vec3_dot(camera_position, camera_direction_up); 
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = camera_direction_right.x;
+    t.m[POSSUM_MATH_MAT3_R3C1] = camera_direction_right.y;
+    t.m[POSSUM_MATH_MAT3_R3C2] = camera_direction_right.z;
+    t.m[POSSUM_MATH_MAT3_R3C3] = translation_x;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = camera_direction_up.x;
+    t.m[POSSUM_MATH_MAT3_R3C1] = camera_direction_up.y;
+    t.m[POSSUM_MATH_MAT3_R3C2] = camera_direction_up.z;
+    t.m[POSSUM_MATH_MAT3_R3C3] = translation_y;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = camera_direction_forward.x;
+    t.m[POSSUM_MATH_MAT3_R3C1] = camera_direction_forward.y;
+    t.m[POSSUM_MATH_MAT3_R3C2] = camera_direction_forward.z;
+    t.m[POSSUM_MATH_MAT3_R3C3] = translation_z;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
+    return(t);
+}
+
+inline PossumMathTransform
+possum_math_transform_camera_view(
+    PossumMathDirectionPtr camera_direction,
+    PossumMathVec3Ptr      camera_position) {
+
+    PossumMathVec3 camera_direction_forward = camera_direction->forward; 
+    PossumMathVec3 camera_direction_right   = camera_direction->right; 
+    PossumMathVec3 camera_direction_up      = camera_direction->up; 
+
+    f32 translation_x = possum_math_vec3_dot(camera_position, camera_direction_forward); 
+    f32 translation_y = possum_math_vec3_dot(camera_position, camera_direction_right); 
+    f32 translation_z = possum_math_vec3_dot(camera_position, camera_direction_up); 
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = camera_direction_right.x;
+    t.m[POSSUM_MATH_MAT3_R3C1] = camera_direction_up.x;
+    t.m[POSSUM_MATH_MAT3_R3C2] = camera_direction_forward.x;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = camera_direction_right.y;
+    t.m[POSSUM_MATH_MAT3_R3C1] = camera_direction_up.y;
+    t.m[POSSUM_MATH_MAT3_R3C2] = camera_direction_forward.y;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = camera_direction_right.z;
+    t.m[POSSUM_MATH_MAT3_R3C1] = camera_direction_up.z;
+    t.m[POSSUM_MATH_MAT3_R3C2] = camera_direction_forward.z;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = -translation_x;
+    t.m[POSSUM_MATH_MAT3_R3C1] = -translation_y;
+    t.m[POSSUM_MATH_MAT3_R3C2] = -translation_z;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
     return(t);
 }
 
