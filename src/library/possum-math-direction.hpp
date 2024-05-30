@@ -35,8 +35,8 @@ possum_math_direction_default() {
 
 inline PossumMathDirection
 possum_math_direction_look_at(
-    PossumMathVec3 position,
-    PossumMathVec3 target) {
+    PossumMathVec3Ptr position,
+    PossumMathVec3Ptr target) {
 
     //calculate the forward vector
     PossumMathVec3 position_diff_target = possum_math_vec3_difference_a_to_b(position,target);

@@ -261,7 +261,7 @@ possum_math_vec3_magnitude_batch_simd(
     }
 }
 
-inline void
+inline PossumMathVec3
 possum_math_vec3_normalize(
     PossumMathVec3Ptr v3) {
 
@@ -272,7 +272,11 @@ possum_math_vec3_normalize(
             ? 0.0f
             : 1.0f / magnitude; 
 
-    possum_math_vec3_scalar(v3,magnitude_inverse);
+    PossumMathVec3 normalized = possum_math_vec3_copy(v3);
+
+    possum_math_vec3_scalar(&normalized,magnitude_inverse);
+
+    return(normalized);
 }
 
 inline PossumMathVec3

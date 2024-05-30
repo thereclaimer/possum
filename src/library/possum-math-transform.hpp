@@ -5,9 +5,10 @@
 #include "possum-math-simd-4f32.hpp"
 #include "possum-math-vec3.hpp"
 #include "possum-math-mat3.hpp"
-#include "possum-math-mat4.hpp"
 #include "possum-math-trig.hpp"
 #include "possum-math-direction.hpp"
+#include "possum-math-quaternion.hpp"
+#include "possum-math-mat4.hpp"
 
 typedef PossumMathMat4       PossumMathTransform;
 typedef PossumMathTransform* PossumMathTransformPtr;
@@ -17,6 +18,7 @@ possum_math_transform_translate(
     f32 tx,
     f32 ty,
     f32 tz) {
+
 
     PossumMathTransform t = possum_math_mat4_identity();
 
@@ -113,16 +115,16 @@ possum_math_transform_translate_and_scale_vectors(
     return(t);
 }
 
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RX                   0
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RY                   1
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RZ                   2
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_ANGLE_RADIANS        3
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_COS_R                4
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_SIN_R                5
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_ONE_SUB_COS_R        6
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RX_ONE_SUB_COS_R     7
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RY_ONE_SUB_COS_R     8
-#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RZ_ONE_SUB_COS_R     9
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RX                  0
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RY                  1
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RZ                  2
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_ANGLE_RADIANS       3
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_COS_R               4
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_SIN_R               5
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_ONE_SUB_COS_R       6
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RX_ONE_SUB_COS_R    7
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RY_ONE_SUB_COS_R    8
+#define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RZ_ONE_SUB_COS_R    9
 #define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RX_RY_ONE_SUB_COS_R 10
 #define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RX_RZ_ONE_SUB_COS_R 11
 #define POSSUM_MATH_TRANSFORM_ROTATION_CACHE_RY_RZ_ONE_SUB_COS_R 12
@@ -456,6 +458,139 @@ possum_math_transform_rotate_degrees_y(
     return(t);
 }
 
+struct PossumMathTransformQuaternionCache {
+
+    union {
+        struct {
+            f32 xx;
+            f32 yy;
+            f32 zz;
+            f32 xy;
+            f32 xz;
+            f32 yz;
+            f32 wx;
+            f32 wy;
+            f32 wz;
+        };
+
+        f32 c[9];
+    };
+};
+
+#define POSSUM_MATH_QUATERNION_CACHE_XX 0
+#define POSSUM_MATH_QUATERNION_CACHE_YY 1
+#define POSSUM_MATH_QUATERNION_CACHE_ZZ 2
+#define POSSUM_MATH_QUATERNION_CACHE_XY 3
+#define POSSUM_MATH_QUATERNION_CACHE_XZ 4
+#define POSSUM_MATH_QUATERNION_CACHE_YZ 5
+#define POSSUM_MATH_QUATERNION_CACHE_WX 6
+#define POSSUM_MATH_QUATERNION_CACHE_WY 7
+#define POSSUM_MATH_QUATERNION_CACHE_WZ 8
+
+inline PossumMathTransformQuaternionCache
+possum_math_transform_quaternion_cache(
+    PossumMathQuaternionPtr q) {
+
+    PossumMathTransformQuaternionCache cache = {0};
+
+    f32p q_wxyz = q->wxyz;
+
+    cache.xx = q_wxyz[POSSUM_MATH_QUATERNION_X] * q_wxyz[POSSUM_MATH_QUATERNION_X];
+    cache.yy = q_wxyz[POSSUM_MATH_QUATERNION_Y] * q_wxyz[POSSUM_MATH_QUATERNION_Y];
+    cache.zz = q_wxyz[POSSUM_MATH_QUATERNION_Z] * q_wxyz[POSSUM_MATH_QUATERNION_Z];
+    cache.xy = q_wxyz[POSSUM_MATH_QUATERNION_X] * q_wxyz[POSSUM_MATH_QUATERNION_Y];
+    cache.xz = q_wxyz[POSSUM_MATH_QUATERNION_X] * q_wxyz[POSSUM_MATH_QUATERNION_Z];
+    cache.yz = q_wxyz[POSSUM_MATH_QUATERNION_Y] * q_wxyz[POSSUM_MATH_QUATERNION_Z];
+    cache.wx = q_wxyz[POSSUM_MATH_QUATERNION_W] * q_wxyz[POSSUM_MATH_QUATERNION_X];
+    cache.wy = q_wxyz[POSSUM_MATH_QUATERNION_W] * q_wxyz[POSSUM_MATH_QUATERNION_Y];
+    cache.wz = q_wxyz[POSSUM_MATH_QUATERNION_W] * q_wxyz[POSSUM_MATH_QUATERNION_Z];
+
+    return(cache);
+}
+
+inline PossumMathTransform
+possum_math_transform_rotate_quaternion(
+    PossumMathQuaternionPtr q) {
+
+    //cache our re-used operations
+    PossumMathTransformQuaternionCache cache = possum_math_transform_quaternion_cache(q);
+    f32p c = cache.c;
+
+    PossumMathTransform t = {0};
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = 1.0f - (2 * c[POSSUM_MATH_QUATERNION_CACHE_YY]) - (2 * c[POSSUM_MATH_QUATERNION_CACHE_ZZ]);
+    t.m[POSSUM_MATH_MAT3_R3C1] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_XY] - c[POSSUM_MATH_QUATERNION_CACHE_WZ]);
+    t.m[POSSUM_MATH_MAT3_R3C2] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_XZ] + c[POSSUM_MATH_QUATERNION_CACHE_WY]);
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_XY] + c[POSSUM_MATH_QUATERNION_CACHE_WZ]);
+    t.m[POSSUM_MATH_MAT3_R3C1] = 1.0f - (2 * c[POSSUM_MATH_QUATERNION_CACHE_XX]) - (2 * c[POSSUM_MATH_QUATERNION_CACHE_ZZ]);
+    t.m[POSSUM_MATH_MAT3_R3C2] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_YZ] - c[POSSUM_MATH_QUATERNION_CACHE_WX]);
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_XZ] - c[POSSUM_MATH_QUATERNION_CACHE_WY]);
+    t.m[POSSUM_MATH_MAT3_R3C1] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_YZ] + c[POSSUM_MATH_QUATERNION_CACHE_WX]);
+    t.m[POSSUM_MATH_MAT3_R3C2] = 1.0f - (2 * c[POSSUM_MATH_QUATERNION_CACHE_XX]) - (2 * c[POSSUM_MATH_QUATERNION_CACHE_YY]);
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
+    return(t);
+}
+
+inline PossumMathTransform
+possum_math_transform_rotate_quaternion_euler_radians(
+    f32 radians_roll,
+    f32 radians_pitch,
+    f32 radians_yaw) {
+
+    //get the quaternion
+    PossumMathQuaternion q = 
+        possum_math_quaternion_euler_angles_radians(
+            radians_roll,
+            radians_pitch,
+            radians_yaw);
+
+    //cache our re-used operations
+    PossumMathTransformQuaternionCache cache = possum_math_transform_quaternion_cache(&q);
+    f32p c = cache.c;
+
+    PossumMathTransform t = {0};
+
+    //row 0
+    t.m[POSSUM_MATH_MAT3_R3C0] = 1.0f - (2 * c[POSSUM_MATH_QUATERNION_CACHE_YY]) - (2 * c[POSSUM_MATH_QUATERNION_CACHE_ZZ]);
+    t.m[POSSUM_MATH_MAT3_R3C1] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_XY] - c[POSSUM_MATH_QUATERNION_CACHE_WZ]);
+    t.m[POSSUM_MATH_MAT3_R3C2] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_XZ] + c[POSSUM_MATH_QUATERNION_CACHE_WY]);
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 1
+    t.m[POSSUM_MATH_MAT3_R3C0] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_XY] + c[POSSUM_MATH_QUATERNION_CACHE_WZ]);
+    t.m[POSSUM_MATH_MAT3_R3C1] = 1.0f - (2 * c[POSSUM_MATH_QUATERNION_CACHE_XX]) - (2 * c[POSSUM_MATH_QUATERNION_CACHE_ZZ]);
+    t.m[POSSUM_MATH_MAT3_R3C2] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_YZ] - c[POSSUM_MATH_QUATERNION_CACHE_WX]);
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 2
+    t.m[POSSUM_MATH_MAT3_R3C0] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_XZ] - c[POSSUM_MATH_QUATERNION_CACHE_WY]);
+    t.m[POSSUM_MATH_MAT3_R3C1] = 2 * (c[POSSUM_MATH_QUATERNION_CACHE_YZ] + c[POSSUM_MATH_QUATERNION_CACHE_WX]);
+    t.m[POSSUM_MATH_MAT3_R3C2] = 1.0f - (2 * c[POSSUM_MATH_QUATERNION_CACHE_XX]) - (2 * c[POSSUM_MATH_QUATERNION_CACHE_YY]);
+    t.m[POSSUM_MATH_MAT3_R3C3] = 0.0f;
+    
+    //row 3
+    t.m[POSSUM_MATH_MAT3_R3C0] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C1] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C2] = 0.0f;
+    t.m[POSSUM_MATH_MAT3_R3C3] = 1.0f;
+
+    return(t);
+}
+
 inline PossumMathTransform
 possum_math_transform_rotate_degrees_z(
     f32 angle_degrees) {
@@ -505,9 +640,9 @@ possum_math_transform_camera_look_at(
     PossumMathVec3 camera_direction_right   = camera_direction->right; 
     PossumMathVec3 camera_direction_up      = camera_direction->up; 
 
-    f32 translation_x = possum_math_vec3_dot(camera_position, camera_direction_forward); 
-    f32 translation_y = possum_math_vec3_dot(camera_position, camera_direction_right); 
-    f32 translation_z = possum_math_vec3_dot(camera_position, camera_direction_up); 
+    f32 translation_x = possum_math_vec3_dot(camera_position, &camera_direction_forward); 
+    f32 translation_y = possum_math_vec3_dot(camera_position, &camera_direction_right); 
+    f32 translation_z = possum_math_vec3_dot(camera_position, &camera_direction_up); 
 
     //row 0
     t.m[POSSUM_MATH_MAT3_R3C0] = camera_direction_right.x;
@@ -545,9 +680,11 @@ possum_math_transform_camera_view(
     PossumMathVec3 camera_direction_right   = camera_direction->right; 
     PossumMathVec3 camera_direction_up      = camera_direction->up; 
 
-    f32 translation_x = possum_math_vec3_dot(camera_position, camera_direction_forward); 
-    f32 translation_y = possum_math_vec3_dot(camera_position, camera_direction_right); 
-    f32 translation_z = possum_math_vec3_dot(camera_position, camera_direction_up); 
+    f32 translation_x = possum_math_vec3_dot(camera_position, &camera_direction_forward); 
+    f32 translation_y = possum_math_vec3_dot(camera_position, &camera_direction_right); 
+    f32 translation_z = possum_math_vec3_dot(camera_position, &camera_direction_up); 
+
+    PossumMathTransform t = {0};
 
     //row 0
     t.m[POSSUM_MATH_MAT3_R3C0] = camera_direction_right.x;
@@ -575,5 +712,30 @@ possum_math_transform_camera_view(
 
     return(t);
 }
+
+inline PossumMathTransform
+possum_math_transform_trs(
+    f32 translate_x,
+    f32 translate_y,
+    f32 translate_z,
+    f32 scale_x,
+    f32 scale_y,
+    f32 scale_z,
+    f32 radians_roll,
+    f32 radians_pitch,
+    f32 radians_yaw) {
+
+    //get our individual transforms
+    PossumMathTransform  translate  = possum_math_transform_translate(translate_x,translate_y,translate_z);
+    PossumMathTransform  scale      = possum_math_transform_scale(scale_x, scale_y, scale_z);
+    PossumMathTransform  rotation   = possum_math_transform_rotate_quaternion_euler_radians(radians_roll,radians_pitch,radians_yaw);
+
+    //put together the trs transform
+    //TODO: for some reason we're not picking up any new functions past the identity in mat4...
+
+    return(rotation);
+}
+
+
 
 #endif //POSSUM_MATH_TRANSFORM_HPP
